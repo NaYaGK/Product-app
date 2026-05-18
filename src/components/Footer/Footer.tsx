@@ -31,7 +31,7 @@ export default function Footer({ locale = 'en' }: Props) {
         </div>
 
         <div className="text-sm text-gray-400">
-          © 2026 MyStore. {t.rights}
+          © 2026 MyStore. {t.rights} by NaYaGK
         </div>
       </div>
     </footer>
