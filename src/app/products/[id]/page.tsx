@@ -1,5 +1,6 @@
 import { products } from '@/data/products';
 import Link from 'next/link';
+import Header from '@/components/Header/Header';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -8,11 +9,13 @@ interface PageProps {
 
 export default async function ProductDetail({ params, searchParams }: PageProps) {
   const { id } = await params;
-  const { lang = 'en' } = await searchParams;
+  const paramsData = await searchParams;
+
+  const lang: 'en' | 'fr' =
+    paramsData.lang === 'fr' ? 'fr' : 'en'; // ✅ SAFE
 
   const product = products.find((p) => p.id === Number(id));
 
-  // ✅ Language text map
   const textMap = {
     en: {
       back: 'Back to Products',
@@ -28,47 +31,55 @@ export default async function ProductDetail({ params, searchParams }: PageProps)
 
   if (!product) {
     return (
-      <div className="p-10 text-white">
-        <h1 className="text-3xl font-bold">
-          {t.notFound}
-        </h1>
-      </div>
+      <>
+        <Header locale={lang} />
+
+        <div className="p-10 text-white">
+          <h1 className="text-3xl font-bold">
+            {t.notFound}
+          </h1>
+        </div>
+      </>
     );
   }
 
   return (
-    <div className="p-10 text-white">
-      {/* ✅ Back Button with locale */}
-      <Link
-        href={`/?lang=${lang}`}
-        className="text-blue-400 hover:underline mb-6 inline-block"
-      >
-        ← {t.back}
-      </Link>
+    <>
+      {/* ✅ Header inside return */}
+      <Header locale={lang} />
 
-      <div className="grid md:grid-cols-2 gap-10 items-start">
-        <img
-          src={product.image}
-          alt={product.title[lang]}
-          className="w-full rounded-lg"
-        />
+      <div className="p-10 text-white">
+        <Link
+          href={`/?lang=${lang}`}
+          className="text-blue-400 hover:underline mb-6 inline-block"
+        >
+          ← {t.back}
+        </Link>
 
-        <div>
-          <h1 className="text-3xl font-bold mb-4">
-            {product.title[lang]}
-          </h1>
+        <div className="grid md:grid-cols-2 gap-10 items-start">
+          <img
+            src={product.image}
+            alt={product.title[lang]}
+            className="w-full rounded-lg"
+          />
 
-          <p className="text-gray-400 mb-6">
-            {lang === 'fr'
-              ? 'Ceci est une description de produit.'
-              : 'This is a sample product description.'}
-          </p>
+          <div>
+            <h1 className="text-3xl font-bold mb-4">
+              {product.title[lang]}
+            </h1>
 
-          <button className="bg-blue-500 px-6 py-3 rounded-lg hover:bg-blue-600 transition">
-            {lang === 'fr' ? 'Ajouter au panier' : 'Add to Cart'}
-          </button>
+            <p className="text-gray-400 mb-6">
+              {lang === 'fr'
+                ? 'Ceci est une description de produit.'
+                : 'This is a sample product description.'}
+            </p>
+
+            <button className="bg-blue-500 px-6 py-3 rounded-lg hover:bg-blue-600 transition">
+              {lang === 'fr' ? 'Ajouter au panier' : 'Add to Cart'}
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
