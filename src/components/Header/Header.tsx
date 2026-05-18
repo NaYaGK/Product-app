@@ -35,7 +35,12 @@ export default function Header({ locale, search: initialSearch = '' }: Props) {
             value={locale}
             onChange={(e) => {
               const lang = e.target.value as 'en' | 'fr';
-              router.push(`${pathname}?lang=${lang}${search ? `&search=${search}` : ''}`);
+
+              router.push(
+                `${pathname}?lang=${lang}${
+                  search ? `&search=${search}` : ''
+                }`
+              );
             }}
             className="p-2 rounded bg-gray-800 border border-gray-600"
           >
@@ -50,7 +55,6 @@ export default function Header({ locale, search: initialSearch = '' }: Props) {
           >
             🔍
           </button>
-
         </div>
       </div>
 
@@ -62,9 +66,14 @@ export default function Header({ locale, search: initialSearch = '' }: Props) {
           onChange={(e) => {
             const val = e.target.value;
             setSearch(val);
+
             router.push(`/?search=${val}&lang=${locale}`);
           }}
-          placeholder={locale === 'fr' ? 'Rechercher...' : 'Search products...'}
+          placeholder={
+            locale === 'fr'
+              ? 'Rechercher...'
+              : 'Search products...'
+          }
           className="w-full mt-4 p-3 rounded-lg bg-gray-800 text-white border border-gray-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       )}
