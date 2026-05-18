@@ -1,22 +1,20 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter, useSearchParams, usePathname } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
-export const dynamic = 'force-dynamic';
 
+type Props = {
+  locale: 'en' | 'fr';
+  search?: string;
+};
 
-export default function Header() {
+export default function Header({ locale, search: initialSearch = '' }: Props) {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const pathname = usePathname();
 
-  // ✅ Read from URL instead of state
-  const locale = (searchParams.get('lang') as 'en' | 'fr') || 'en';
-  const searchQuery = searchParams.get('search') || '';
-
   const [showSearch, setShowSearch] = useState(false);
-  const [search, setSearch] = useState(searchQuery);
+  const [search, setSearch] = useState(initialSearch);
 
   return (
     <div className="w-full px-6 py-4 bg-black text-white border-b border-gray-700">
@@ -38,7 +36,6 @@ export default function Header() {
             onChange={(e) => {
               const lang = e.target.value as 'en' | 'fr';
               router.push(`${pathname}?lang=${lang}${search ? `&search=${search}` : ''}`);
-              //router.push(`${pathname}?lang=${lang}&search=${search}`);
             }}
             className="p-2 rounded bg-gray-800 border border-gray-600"
           >
